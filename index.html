@@ -15,14 +15,15 @@
 
     <div class="mt-3 container-fluid">
         <div class="row">
-            <h3 class="col-5">GitHub API</h3>
-            <div class="col-4">
-                <input type="text" id="searchText" value="">
-                <select name="select" id="selectBar">
-                    <option value="user" selected>User</option>
+            <h3 class="col-md-4">GitHub API</h3>
+            <div class="col-md-4 d-flex">
+                <input class="form-control" id="searchText" type="search" placeholder="Search" aria-label="Search">
+                <select class="form-select" id="selectBar" aria-label="Default select example">
+                    <option disabled selected>Apri il menu</option>
+                    <option value="user">User</option>
                     <option value="repository">Repository</option>
                 </select>
-                <button id="searchButton">Search</button>
+                <button id="searchButton" onclick="search()" class="btn btn-outline-success">Search</button>
             </div>
         </div>
     </div>
@@ -30,7 +31,7 @@
     <div id="containerCard" class="container d-flex flex-wrap mt-5">
 
         <div>
-            
+
         </div>
 
     </div>
