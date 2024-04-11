@@ -47,6 +47,7 @@ let searchText = document.getElementById("searchText");
 let selectBar = document.getElementById("selectBar");
 let searchButton = document.getElementById("searchButton");
 let containerCard = document.getElementById("containerCard");
+let searchError = document.getElementById("searchError");
 
 searchText.addEventListener("input", function () {
     console.log("Valore dell'input searchText:", searchText.value);
@@ -54,6 +55,11 @@ searchText.addEventListener("input", function () {
 
 function displayUsers(users) {
     containerCard.innerHTML = "";
+    if (users.length === 0) {
+        searchError.innerHTML = "Nessun utente trovato";
+        searchError.classList.remove("d-none");
+        return;
+    }
 
     users.forEach(item => {
         const cardTypeClass = item.type == "User" ? "bg-user" : "bg-organization";
@@ -69,6 +75,8 @@ function displayUsers(users) {
                             <h5 class="card-title">${item.login}</h5>
                             <p class="card-text mt-2"><strong>Profilo: </strong>${item.type}</p>
                         </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
                         <a href="${item.html_url}" target="_blank" class="btn btn-secondary">Vai al profilo</a>
                     </div>
                 </div>
@@ -78,8 +86,20 @@ function displayUsers(users) {
     });
 }
 
+/* 
+Milestone 3
+Integriamo una validazione minimale: la ricerca deve partire solo se l’utente ha digitato almeno 3 caratteri.
+Mostriamo un messaggio in caso non venga restituito nessun risultato (es. non esiste una repo con il nome che è stato cercato).
+Aggiungiamo un loader che sarà mostrato mentre siamo in attesa di ottenere i risultati.
+ */
+
 function displayRepositories(repositories) {
     containerCard.innerHTML = "";
+    if (repositories.length === 0) {
+        searchError.innerHTML = "Nessuna repository trovata";
+        searchError.classList.remove("d-none");
+        return;
+    }
 
     repositories.forEach(item => {
         const cardElement =
@@ -93,6 +113,8 @@ function displayRepositories(repositories) {
                         <h5 class="card-title">${item.full_name}</h5>
                         <p class="card-title mt-2">${item.description}</p>
                         </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
                         <a href="${item.html_url}" target="_blank" class="btn btn-secondary">Vai alla repository</a>
                     </div>
                 </div>
@@ -103,11 +125,22 @@ function displayRepositories(repositories) {
 }
 
 function search() {
-    if (selectBar.value == "user") {
+    if (selectBar.value == "user" && searchText.value.length >= 3) {
         searchUsers();
+        searchError.classList.add("d-none");
+
+    } else if (searchText.value.length < 3) {
+        searchError.innerHTML = "La ricerca deve avere almeno 3 caratteri";
+        searchError.classList.remove("d-none");
+        containerCard.innerHTML = "";
 
     } else if (selectBar.value == "repository") {
         searchRepositories();
+        searchError.classList.add("d-none");
+    } else if (searchText.value.length >= 3 && selectBar.value != "user" && selectBar.value != "repository") {
+        searchError.innerHTML = "Seleziona 'User' o 'Repository'";
+        searchError.classList.remove("d-none");
+        containerCard.innerHTML = "";
     }
 }
 
